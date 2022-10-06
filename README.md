@@ -1,16 +1,26 @@
-# finances
+# Projeto de software salão de beleza control
 
-A new Flutter project.
 
-## Getting Started
+## Aluno
 
-This project is a starting point for a Flutter application.
+Erick Luan Monteiro RA: 1645188
 
-A few resources to get you started if this is your first Flutter project:
+## Intro
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+Projeto é idealizado na matéria de projeto de software um aplicativo para controle de agendamento e venda de serviços prestados em um salão de beleza, seja ele feminino ou masculino;
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Detalhamento
+
+- Projeto realizado em flutter com datastore firebase
+- Login: erick.luan.monteiro@gmail.com
+  Senha: erick1196
+- consiste no desenvolvimento dos seguintes itens:
+    -  Controle de clientes
+    -  Controle de Funcionarios 
+    -  Controle de Convênios
+    -  Controle de serviços
+    -  Agenda, agendamento de serviço (somente mostrando a agenda nada operante)
+    -  Controle Financeiro (Caixa esta em desenvolvimento, até o momento foi criado somente a inserção de cliente e serviços, não está realizando a finalização do pedido)
+    -  Relatórios (Nada implementado)
+- O Aplicativo ja esta consumindo o firebase realizando operação de criação edição e deleção de itens.
+
