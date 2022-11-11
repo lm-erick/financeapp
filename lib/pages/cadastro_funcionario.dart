@@ -40,7 +40,12 @@ class CadastroFuncionarioPage extends StatelessWidget {
       home: Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
-          title: Text('Cadastro'),
+          leading: IconButton(
+              icon: Icon(Icons.arrow_back_ios_new_rounded),
+              onPressed: () {
+                Navigator.pop(context);
+              }),
+          title: Text('Cadastro Funcionário'),
         ),
         body: SingleChildScrollView(
           child: Form(
@@ -84,15 +89,6 @@ class CadastroFuncionarioPage extends StatelessWidget {
                     },
                     child: Text('Salvar'),
                   ),
-                  TextButton(
-                    style: TextButton.styleFrom(
-                      primary: Colors.blue,
-                    ),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    child: Text('Voltar'),
-                  )
                 ],
               ),
             ),

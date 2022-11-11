@@ -11,7 +11,12 @@ class ClientesPage extends StatelessWidget {
     return MaterialApp(
         home: Scaffold(
       appBar: AppBar(
-        title: title(context),
+        leading: IconButton(
+            icon: Icon(Icons.arrow_back_ios_new_rounded),
+            onPressed: () {
+              Navigator.pop(context);
+            }),
+        title: Text('Clientes'),
       ),
       body: SingleChildScrollView(
         child: listClients(context),
@@ -27,24 +32,6 @@ class ClientesPage extends StatelessWidget {
         heroTag: null,
       ),
     ));
-  }
-
-  Widget title(BuildContext context) {
-    return Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          IconButton(
-            iconSize: 20.0,
-            icon: Icon(Icons.arrow_back_ios_new_rounded),
-            tooltip: 'Convênios',
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          ),
-          spaceBoxWidth(10),
-          Text('Cadastro de clientes')
-        ]);
   }
 
   Widget listClients(BuildContext context) {

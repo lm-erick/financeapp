@@ -58,4 +58,12 @@ class CreateTextForm {
       },
     );
   }
+
+  SizedBox spaceBoxWidth(double value) {
+    return SizedBox(width: value);
+  }
+
+  SizedBox spaceBoxHeigth(double value) {
+    return SizedBox(height: value);
+  }
 }

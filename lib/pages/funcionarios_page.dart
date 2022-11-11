@@ -11,7 +11,12 @@ class FuncionariosPage extends StatelessWidget {
     return MaterialApp(
         home: Scaffold(
       appBar: AppBar(
-        title: title(context),
+        leading: IconButton(
+            icon: Icon(Icons.arrow_back_ios_new_rounded),
+            onPressed: () {
+              Navigator.pop(context);
+            }),
+        title: Text('Funcionários'),
       ),
       body: SingleChildScrollView(
         child: listClients(context),
@@ -28,23 +33,6 @@ class FuncionariosPage extends StatelessWidget {
         heroTag: null,
       ),
     ));
-  }
-
-  Widget title(BuildContext context) {
-    return Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          IconButton(
-            iconSize: 20.0,
-            icon: Icon(Icons.arrow_back_ios_new_rounded),
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          ),
-          spaceBoxWidth(10),
-          Text('Cadastro de funcionário')
-        ]);
   }
 
   Widget listClients(BuildContext context) {

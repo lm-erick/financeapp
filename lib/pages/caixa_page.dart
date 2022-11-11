@@ -1,9 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:finances/controller/caixa_controller.dart';
+import 'package:finances/controller/report_controller.dart';
 import 'package:finances/controller/servico_controller.dart';
+import 'package:finances/models/item_pedido_model.dart';
+import 'package:finances/models/order_model.dart';
+import 'package:finances/pages/caixa_itens_page.dart';
 import 'package:finances/pages/create_text_form.dart';
+import 'package:finances/pages/dropdown_generic.dart';
 import 'package:finances/pages/dropdown_clientes.dart';
 import 'package:finances/pages/listview_item_pedido.dart';
+import 'package:finances/pages/pdf_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -12,27 +18,27 @@ class CaixaPage extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
 
   CaixaController controller = CaixaController();
+  ReportController reportController = ReportController();
 
-  TextEditingController _convenio = TextEditingController();
-  TextEditingController _servico = TextEditingController();
-  TextEditingController _nomeServico = TextEditingController();
   TextEditingController _cliente = TextEditingController();
-  TextEditingController _quantidade = TextEditingController();
-  TextEditingController _price = TextEditingController();
-  TextEditingController _desconto = TextEditingController();
+  TextEditingController _typeOrder = TextEditingController();
+
+  List<String> types = ['Serviços', 'Pacotes'];
 
   final CreateTextForm utilsView = CreateTextForm();
 
   @override
   Widget build(BuildContext context) {
-    _desconto.text = '0';
-    _quantidade.text = '1';
-    _price.text = '0,00';
     return MaterialApp(
       home: Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
-          title: Text('Frente de caixa'),
+          leading: IconButton(
+              icon: Icon(Icons.arrow_back_ios_new_rounded),
+              onPressed: () {
+                Navigator.pop(context);
+              }),
+          title: Text('Realizar cobrança'),
         ),
         body: SingleChildScrollView(
           child: Form(
@@ -42,87 +48,46 @@ class CaixaPage extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
+                  Text('Cliente'),
                   DropdownButtonClientes(
                     controller: _cliente,
                   ),
-                  inputServices(_price, _servico, _nomeServico),
-                  TextFormField(
-                    controller: _price,
-                    decoration: InputDecoration(labelText: 'Preço'),
-                    inputFormatters: <TextInputFormatter>[
-                      controller.moneyFormater()
-                    ],
-                    keyboardType: TextInputType.number,
+                  Text('Tipo de cobrança'),
+                  DropdownButtonGeneric(
+                    controller: _typeOrder,
+                    itens: types,
+                    option: 'Serviço',
                   ),
-                  utilsView.createTextFormFieldNumber(
-                      _quantidade, 'Quantidade', '########', 14),
-                  utilsView.createTextFormFieldNumber(
-                      _desconto, 'Desconto (%)', '########', 14),
-                  ListViewItemPedido(
-                    controllerDesconto: _desconto,
-                    controllerPrice: _price,
-                    controllerQuantidade: _quantidade,
-                    controllerServico: _servico,
-                    controllerNomeServico: _nomeServico,
-                  ),
-                  TextButton(
-                    style: TextButton.styleFrom(
-                      primary: Colors.blue,
-                    ),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    child: Text('Voltar'),
-                  )
                 ],
               ),
             ),
           ),
         ),
+        floatingActionButton: FloatingActionButton(
+          child: Icon(Icons.arrow_forward),
+          onPressed: () {
+            Order order = Order(
+                clienteId: _cliente.text,
+                orderType: _typeOrder.text,
+                orderItens: <ItemPedido>[]);
+
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => ItensCaixaPage(order: order)),
+            );
+          },
+          heroTag: null,
+        ),
       ),
     );
   }
 
-  Widget inputServices(TextEditingController price,
-      TextEditingController servico, TextEditingController nomeServico) {
-    return StreamBuilder<QuerySnapshot>(
-      stream: ServicoController().getAllServico(),
-      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-        if (snapshot.hasError) return Text('Something went wrong');
-
-        if (snapshot.connectionState == ConnectionState.waiting)
-          return Text("Loading");
-
-        return Wrap(
-            runSpacing: 5.0,
-            spacing: 5.0,
-            alignment: WrapAlignment.center,
-            children: snapshot.data!.docs.map((DocumentSnapshot document) {
-              Map<String, dynamic> data =
-                  document.data()! as Map<String, dynamic>;
-
-              return SizedBox(
-                  width: 85,
-                  height: 50,
-                  child: ElevatedButton(
-                    style: TextButton.styleFrom(
-                      primary: Colors.white,
-                    ),
-                    onPressed: () {
-                      servico.text = document.id;
-                      nomeServico.text = data['name'];
-                      price.text = controller
-                          .moneyFormater()
-                          .format(data['value'].toString())
-                          .toString();
-                    },
-                    child: Text(data['name'],
-                        style: TextStyle(height: 1, fontSize: 10)),
-                  ));
-            }).toList());
-      },
-    );
+  SizedBox spaceBoxWidth(double value) {
+    return SizedBox(width: value);
   }
 
-  
+  SizedBox spaceBoxHeigth(double value) {
+    return SizedBox(height: value);
+  }
 }

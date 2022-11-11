@@ -11,7 +11,12 @@ class ServicosPage extends StatelessWidget {
     return MaterialApp(
         home: Scaffold(
       appBar: AppBar(
-        title: title(context),
+        leading: IconButton(
+            icon: Icon(Icons.arrow_back_ios_new_rounded),
+            onPressed: () {
+              Navigator.pop(context);
+            }),
+        title: Text('Serviços'),
       ),
       body: SingleChildScrollView(
         child: listServicos(context),
@@ -27,24 +32,6 @@ class ServicosPage extends StatelessWidget {
         heroTag: null,
       ),
     ));
-  }
-
-  Widget title(BuildContext context) {
-    return Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          IconButton(
-            iconSize: 20.0,
-            icon: Icon(Icons.arrow_back_ios_new_rounded),
-            tooltip: 'Convênios',
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          ),
-          spaceBoxWidth(10),
-          Text('Cadastro de serviços')
-        ]);
   }
 
   Widget listServicos(BuildContext context) {
@@ -77,6 +64,8 @@ class ServicosPage extends StatelessWidget {
                 document.data()! as Map<String, dynamic>;
             return ListTile(
                 title: Text(data['name']),
+                subtitle: Text(
+                    'R\$${data['value'].toStringAsFixed(2).toString().replaceAll('.', ',')}'),
                 trailing: options(correctContext, document.id));
           }).toList(),
         );

@@ -13,6 +13,7 @@ class CadastroServico extends StatelessWidget {
   TextEditingController _name = TextEditingController();
   TextEditingController _convenio = TextEditingController();
   TextEditingController _price = TextEditingController();
+  TextEditingController _duracao = TextEditingController();
 
   final ServicoController controller = ServicoController();
 
@@ -29,10 +30,9 @@ class CadastroServico extends StatelessWidget {
               _name.text = documentSnapshot.get('name'),
               _convenio.text = documentSnapshot.get('convenioId'),
               _price.text = controller.moneyFormater().format(
-                  documentSnapshot.get('value').toStringAsFixed(2).toString())
+                  documentSnapshot.get('value').toStringAsFixed(2).toString()),
+              _duracao.text = documentSnapshot.get('duration').toString()
             });
-
-    print(_convenio.text);
   }
 
   @override
@@ -41,7 +41,12 @@ class CadastroServico extends StatelessWidget {
       home: Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
-          title: Text('Cadastro'),
+          leading: IconButton(
+              icon: Icon(Icons.arrow_back_ios_new_rounded),
+              onPressed: () {
+                Navigator.pop(context);
+              }),
+          title: Text('Cadastro Serviço'),
         ),
         body: SingleChildScrollView(
           child: Form(
@@ -54,11 +59,19 @@ class CadastroServico extends StatelessWidget {
                   utilsView.createTextFormFieldText(_name, 'Nome Serviço'),
                   TextFormField(
                     controller: _price,
+                    decoration: InputDecoration(labelText: 'Preço'),
                     inputFormatters: <TextInputFormatter>[
                       controller.moneyFormater()
                     ],
                     keyboardType: TextInputType.number,
                   ),
+                  TextFormField(
+                    controller: _duracao,
+                    decoration: InputDecoration(labelText: 'Duração (Minutos)'),
+                    keyboardType: TextInputType.number,
+                  ),
+                  utilsView.spaceBoxHeigth(10),
+                  Text('Convênio'),
                   DropdownButtonConvenios(
                     convenio: _convenio,
                   ),
@@ -72,7 +85,9 @@ class CadastroServico extends StatelessWidget {
                       Servico servico = Servico(
                           name: _name.text,
                           value: num.parse(_price.text.replaceAll(',', '.')),
-                          convenioId: _convenio.text);
+                          convenioId: _convenio.text,
+                          duration:
+                              num.parse(_duracao.text.replaceAll(',', '.')));
 
                       controller.saveServico(servicoId, servico);
 
@@ -80,15 +95,6 @@ class CadastroServico extends StatelessWidget {
                     },
                     child: Text('Salvar'),
                   ),
-                  TextButton(
-                    style: TextButton.styleFrom(
-                      primary: Colors.blue,
-                    ),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    child: Text('Voltar'),
-                  )
                 ],
               ),
             ),

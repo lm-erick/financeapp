@@ -1,21 +1,29 @@
+import 'dart:async';
+
 import 'package:finances/controller/utils_controller.dart';
-import 'package:finances/models/item_controller_model.dart';
-import 'package:finances/models/item_pedido_model.dart';
+import 'package:finances/models/item_pacote.dart';
 import 'package:flutter/material.dart';
 
-class ListViewItemPedido extends StatefulWidget {
-  ListViewItemPedido({Key? key, required this.controllers, required this.items})
+class ListViewItemPacote extends StatefulWidget {
+  ListViewItemPacote(
+      {Key? key,
+      required this.controllerServico,
+      required this.controllerPrice,
+      required this.controllerNomeServico,
+      required this.items})
       : super(key: key);
 
-  final ItemPedidoControllers controllers;
+  final TextEditingController controllerServico;
+  final TextEditingController controllerPrice;
+  final TextEditingController controllerNomeServico;
 
-  List<ItemPedido> items;
+  List<ItemPacote> items;
 
   @override
-  State<ListViewItemPedido> createState() => _ListViewItemPedidoState();
+  State<ListViewItemPacote> createState() => _ListViewItemPacoteState();
 }
 
-class _ListViewItemPedidoState extends State<ListViewItemPedido> {
+class _ListViewItemPacoteState extends State<ListViewItemPacote> {
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -25,17 +33,14 @@ class _ListViewItemPedidoState extends State<ListViewItemPedido> {
             primary: Colors.white,
           ),
           onPressed: () {
-            if (widget.controllers.servico.text.isEmpty)
+            if (widget.controllerServico.text.isEmpty)
               return UtilsController().showToast('Selecione um serviço');
 
-            ItemPedido itemPedido = ItemPedido(
-                desconto: widget.controllers.desconto.text,
-                quantidade: widget.controllers.quantidade.text,
-                servico_id: widget.controllers.servico.text,
-                valor_total: widget.controllers.price.text,
-                nome_servico: widget.controllers.nomeServico.text);
-
-            stateSetter(itemPedido);
+            ItemPacote item = ItemPacote(
+                servico_id: widget.controllerServico.text,
+                valor_item: widget.controllerPrice.text,
+                name: widget.controllerNomeServico.text);
+            stateSetter(item);
           },
           child: Text('Adicionar Item'),
         ),
@@ -44,34 +49,9 @@ class _ListViewItemPedidoState extends State<ListViewItemPedido> {
           scrollDirection: Axis.vertical,
           shrinkWrap: true,
           children: widget.items.map((item) {
-            double finalPrice =
-                double.parse(item.valor_total.replaceAll(',', '.'));
-
-            finalPrice = finalPrice * double.parse(item.quantidade);
-
-            double discount = (double.parse(item.desconto) / 100) * finalPrice;
-
-            finalPrice = finalPrice - discount;
-
-            String finalPriceConvert = UtilsController()
-                .moneyFormater()
-                .format(finalPrice.toStringAsFixed(2).toString())
-                .toString();
-
-            String quantidade = item.quantidade;
-
-            String discountText = item.desconto;
-
-            String priceUnd = item.valor_total;
-
-            String infos =
-                "VUND: R\$ $priceUnd QTD: $quantidade \nDESC: $discountText% VT: R\$ $finalPriceConvert ";
-
-            print(infos);
-
             return ListTile(
-                title: Text(item.nome_servico),
-                subtitle: Text(infos),
+                title: Text(item.name),
+                subtitle: Text(item.valor_item),
                 trailing: options(context, item.servico_id));
           }).toList(),
         )
@@ -79,7 +59,7 @@ class _ListViewItemPedidoState extends State<ListViewItemPedido> {
     );
   }
 
-  void stateSetter(ItemPedido item) {
+  void stateSetter(ItemPacote item) {
     setState(() {
       widget.items.add(item);
     });

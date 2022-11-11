@@ -11,7 +11,8 @@ class ServicoRepository extends UtilsController {
         .add({
           'name': servico.name,
           'convenioId': servico.convenioId,
-          'value': servico.value
+          'value': servico.value,
+          'duration': servico.duration
         })
         .then((value) => {showToast('Inserido com sucesso')})
         .catchError((error) => {showToast("Falha ao inserir: $error")});
@@ -23,7 +24,8 @@ class ServicoRepository extends UtilsController {
         .update({
           'name': servico.name,
           'convenioId': servico.convenioId,
-          'value': servico.value
+          'value': servico.value,
+          'duration': servico.duration
         })
         .then((value) => {showToast('Atualizado com sucesso')})
         .catchError((error) => {showToast("Falha ao atualizar: $error")});

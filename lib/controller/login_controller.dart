@@ -9,6 +9,7 @@ class LoginController extends UtilsController {
       await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: password);
     } on FirebaseAuthException catch (e) {
+      print(e.message);
       showToast(USER_ERROR);
     }
   }

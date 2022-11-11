@@ -1,17 +1,38 @@
+import 'package:finances/pages/cadastro_agendamento.dart';
+import 'package:finances/pages/dropdown_funcionarios.dart';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
 class AgendaPage extends StatelessWidget {
+  final TextEditingController _funcionario = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        appBar: AppBar(title: title(context)),
+        appBar: AppBar(
+          leading: IconButton(
+              icon: Icon(Icons.arrow_back_ios_new_rounded),
+              onPressed: () {
+                Navigator.pop(context);
+              }),
+          title: title(context),
+        ),
         body: Container(
           child: SfCalendar(
             view: CalendarView.week,
             initialDisplayDate: DateTime.now(),
           ),
+        ),
+        floatingActionButton: FloatingActionButton(
+          child: Icon(Icons.add),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => CadastroAgendamento()),
+            );
+          },
+          heroTag: null,
         ),
       ),
     );
@@ -22,16 +43,11 @@ class AgendaPage extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          IconButton(
-            iconSize: 20.0,
-            icon: Icon(Icons.arrow_back_ios_new_rounded),
-            tooltip: 'Convênios',
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          ),
+          Text('Agenda'),
           spaceBoxWidth(10),
-          Text('Agenda')
+          DropdownButtonFuncionarios(
+            controller: _funcionario,
+          ),
         ]);
   }
 
